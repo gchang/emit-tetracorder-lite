@@ -1,5 +1,7 @@
 GET= get
 SPRDIR=../specpr/
+# install into $(SP_LOCAL)/bin like the other specpr programs (default $(SP_LOCAL)/bin)
+SP_LOCAL ?= /usr/local
 
 OBJ = tetracorder.o	\
 makvicarlabel.o		\
@@ -81,19 +83,19 @@ tetracorder6.00single:	$(OBJ) $(SPRDIR)/lib/specpr.a $(INCL)
 
 install:	$(OBJ) $(SPRDIR)/lib/specpr.a $(INCL) tetracorder6.00
 	./checkmultmapcompilemode  cube
-	cp tetracorder6.00 /usr/local/bin/tetracorder6.00
-	chmod 755 /usr/local/bin/tetracorder6.00
-	size /usr/local/bin/tetracorder6.00
-	cp -a tetracordersound /usr/local/bin/tetracordersound
-	chmod 755 /usr/local/bin/tetracordersound
+	cp tetracorder6.00 $(SP_LOCAL)/bin/tetracorder6.00
+	chmod 755 $(SP_LOCAL)/bin/tetracorder6.00
+	size $(SP_LOCAL)/bin/tetracorder6.00
+	cp -a tetracordersound $(SP_LOCAL)/bin/tetracordersound
+	chmod 755 $(SP_LOCAL)/bin/tetracordersound
 
 installsingle:	$(OBJ) $(SPRDIR)/lib/specpr.a $(INCL) tetracorder6.00single
 	./checkmultmapcompilemode  singlespectrum
-	cp tetracorder6.00single /usr/local/bin/tetracorder6.00single
-	chmod 755 /usr/local/bin/tetracorder6.00single
-	size /usr/local/bin/tetracorder6.00single
-	cp -a tetracordersound /usr/local/bin/tetracordersound
-	chmod 755 /usr/local/bin/tetracordersound
+	cp tetracorder6.00single $(SP_LOCAL)/bin/tetracorder6.00single
+	chmod 755 $(SP_LOCAL)/bin/tetracorder6.00single
+	size $(SP_LOCAL)/bin/tetracorder6.00single
+	cp -a tetracordersound $(SP_LOCAL)/bin/tetracordersound
+	chmod 755 $(SP_LOCAL)/bin/tetracordersound
 
 	
 

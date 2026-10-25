@@ -86,17 +86,22 @@ def setup_tetrun(
     if out.exists():
         shutil.rmtree(out)
 
+    cmds = f"{tetracorder}/tetracorder.cmds/tetracorder{version}.cmds"
     cmd = [
         "bash",
-        f"{tetracorder}/tetracorder.cmds/tetracorder{version}.cmds/cmd-setup-tetrun",
+        f"{cmds}/cmd-setup-tetrun",
         output,
         sensor,
         mode,
         rfl,
         *args
     ]
+    # cmd-setup-tetrun copies the command files from TETRACORDER_CMDS (default
+    # /t1/tetracorder.cmds/...): use the tree being run unless it is already set
+    env = {"TETRACORDER_CMDS": cmds, **os.environ}
     proc = subprocess.Popen(
         cmd,
+        env    = env,
         stdout = subprocess.PIPE,
         stderr = subprocess.STDOUT,
         text   = True,

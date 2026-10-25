@@ -1,5 +1,7 @@
 MAKE=make
 MAKE2=make fit.o
+# install into $(SP_LOCAL)/bin like the other specpr programs (default $(SP_LOCAL)/bin)
+SP_LOCAL ?= /usr/local
 
 .SUFFIXES:
 .SUFFIXES: .o	.r	.c
@@ -70,8 +72,8 @@ rstart/gstart.r 	rstart/transfer.r
 		(cd rstart; $(MAKE) )
 
 install:
-	cp gfit /usr/local/bin/gfit
-	cp fits /usr/local/bin/fits
+	cp gfit $(SP_LOCAL)/bin/gfit
+	cp fits $(SP_LOCAL)/bin/fits
 
 clean:
 	rm -f *.o; \

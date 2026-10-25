@@ -1,5 +1,7 @@
 
 DBG=../debug
+# install into $(SP_LOCAL)/bin like the other specpr programs (default $(SP_LOCAL)/bin)
+SP_LOCAL ?= /usr/local
 
 OBJ=		\
 	$(SP_LIB)/sputil.a
@@ -8,9 +10,9 @@ OBJ=		\
 all:		oceanopticstospecpr
 
 install:	oceanopticstospecpr
-		cp oceanopticstospecpr /usr/local/bin/oceanopticstospecpr
-		size /usr/local/bin/oceanopticstospecpr
-		cp oceanopticstospecpr-multiple /usr/local/bin/
+		cp oceanopticstospecpr $(SP_LOCAL)/bin/oceanopticstospecpr
+		size $(SP_LOCAL)/bin/oceanopticstospecpr
+		cp oceanopticstospecpr-multiple $(SP_LOCAL)/bin/
 
 oceanopticstospecpr:	oceanopticstospecpr.o $(OBJ)
 		$(F77) $(SP_FFLAGS) -o oceanopticstospecpr oceanopticstospecpr.o \

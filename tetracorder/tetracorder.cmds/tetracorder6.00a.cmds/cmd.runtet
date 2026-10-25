@@ -17,11 +17,13 @@
 #
 #####   TO BE CHANGED WHEN CHANGING TETRACORDER VERSION:
 
+	# installed by make install in $SP_LOCAL/bin (default /usr/local/bin)
+
 	# production version for cubes:
-	ptc="/usr/local/bin/tetracorder6.00"
+	ptc="${SP_LOCAL:-/usr/local}/bin/tetracorder6.00"
 
 	# production version for large single spectra:
-	pts="/usr/local/bin/tetracorder6.00single"
+	pts="${SP_LOCAL:-/usr/local}/bin/tetracorder6.00single"
 
 ####################################################################
 

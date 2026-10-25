@@ -16,8 +16,9 @@
 
 ####################################################################
 #### NOTE: THINGS TO CHANGE IF THIS SCRIPT IS MOVED:          ######
+####       (or set TETRACORDER_CMDS to this directory)        ######
                                                               ######
-source=/t1/tetracorder.cmds/tetracorder6.00a.cmds             ######
+source=${TETRACORDER_CMDS:-/t1/tetracorder.cmds/tetracorder6.00a.cmds}
                                                               ######
 ####################################################################
 #### NOTE: THINGS TO CHANGE FOR NEW VERSIONS                  ######

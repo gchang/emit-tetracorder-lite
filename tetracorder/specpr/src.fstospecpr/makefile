@@ -1,6 +1,8 @@
 # @(#) makefile 2.9@(#)
 
 SHELL=/bin/sh
+# install into $(SP_LOCAL)/bin like the other specpr programs (default $(SP_LOCAL)/bin)
+SP_LOCAL ?= /usr/local
 
 OBJ= \
 specio.o \
@@ -16,7 +18,7 @@ clean:
 	-rm -f ${OBJ} ${PROG}
 
 install:	${OBJ} ${PROG}
-	cp -a ${PROG} /usr/local/bin/${PROG}
+	cp -a ${PROG} $(SP_LOCAL)/bin/${PROG}
 	
 
 .SUFFIXES: .o .c
