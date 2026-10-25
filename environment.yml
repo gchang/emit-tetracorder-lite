@@ -1,0 +1,24 @@
+# Build environment for specpr and Tetracorder without Docker (see README,
+# "Building without Docker"). The same tools the Containerfile installs with
+# apt-get on Ubuntu 22.04, from conda-forge; gcc/gfortran 11 match Ubuntu 22.04.
+# Not on conda-forge: ratfor (needed only to build) and DaVinci (needed only for
+# the browse images); see the README for where to get them.
+# The tetrapy Python environment is still made with `pixi install`.
+name: tetracorder-lite
+channels:
+  - conda-forge
+dependencies:
+  - gcc=11
+  - gxx=11
+  - gfortran=11
+  - binutils
+  - make
+  - tcsh
+  - flex
+  - bison
+  - xorg-libx11
+  - gnuplot
+  - imagemagick
+  - netpbm
+  - openjdk
+  - pixi

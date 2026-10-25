@@ -45,6 +45,64 @@ docker build --platform linux/amd64 -f Containerfile -t tetracorder-lite .
 The image compiles specpr + Tetracorder (Fortran/ratfor), installs DaVinci, and
 sets up the `tetrapy` Python environment via pixi.
 
+## Building without Docker
+
+The same build works without root in a conda environment on Linux x86_64.
+[`environment.yml`](environment.yml) has the build tools the Containerfile gets
+from apt (gcc/gfortran 11, make, flex, bison, libX11, ...) plus pixi. Two
+packages are not on conda-forge:
+
+- **ratfor** (needed only to build): the Debian/Ubuntu package `ratfor`, for example
+  http://archive.ubuntu.com/ubuntu/pool/universe/r/ratfor/ratfor_1.05-2_amd64.deb.
+  Without root, unpack it with `dpkg-deb -x` and copy `usr/bin/ratfor` onto your PATH.
+- **DaVinci** (needed only for the GIF/JPEG browse images and image headers; the
+  L2B products do not use it): the Ubuntu 22.04 package from ASU,
+  https://software.mars.asu.edu/davinci/davinci_3.0.1-1_amd64_ubuntu22_04.deb, which
+  also needs Ubuntu 22.04's `libcfitsio9`, `libhdf5-103-1` and `libcurl3-nss`.
+  Without it the run still makes the L2B products.
+
+From the repository root (programs are installed into `$SP_LOCAL/bin`):
+
+```sh
+conda env create -f environment.yml && conda activate tetracorder-lite
+dpkg-deb -x ratfor_1.05-2_amd64.deb ratfor-deb && cp ratfor-deb/usr/bin/ratfor "$CONDA_PREFIX/bin/"
+
+# the Containerfile's ENV block, with paths into this clone and the environment
+export SPECPR="$PWD/tetracorder/specpr" SP_LOCAL="$CONDA_PREFIX"
+export SSPPFLAGS="LINUX -INTEL -XWIN " RANDRET="32767" SP_BIN="securebin" SP_LDFLAGS=" " \
+  SP_LDLIBS="-lX11" SPSDIR="syslinux" RANLIB="ranlib" SSPP="sspp" F77="gfortran" CC="cc" AR="ar" \
+  RF="ratfor" YACC="yacc" LEX="flex" SP_FFLAGS="-C -O" SP_FFLAGS1="-C" SP_FFLAGS2="-C" \
+  SPKLUDGE="LINUX" BSLASH="-fno-backslash" SP_FOPT="-O" SP_FOPT1="-O" SP_FOPT2="-O" SP_RFLAGS="<" \
+  SP_CFLAGS="-O -fcommon" SP_ARFLAGS="rv" SP_GFLAGS="-s" SP_LFLAGS=" " SP_YFLAGS=" "
+export SP_DBG="$SPECPR/debug" SP_TMP="$SPECPR/tmp" SP_OBJ="$SPECPR/obj" SP_LIB="$SPECPR/lib" \
+  SPSYSOBJ="$SPECPR/obj/syslinux.o"
+# conda's compilers do not search the environment by default (libX11)
+export LIBRARY_PATH="$CONDA_PREFIX/lib" CPATH="$CONDA_PREFIX/include" LD_RUN_PATH="$CONDA_PREFIX/lib"
+
+# the Containerfile's build steps
+(cd tetracorder/specpr && mkdir -p lib obj && (cd src.specpr/common && make) &&
+  sed -i "234,245 s/^/#/" AAA.INSTALL.specpr+support-progs-linux-upgrade.1.7.sh &&
+  yes "" | bash AAA.INSTALL.specpr+support-progs-linux-upgrade.1.7.sh install)
+(cd tetracorder/tetracorder && make install &&
+  sed -i "137,140 s/^/#/" multmap.h && sed -i "144,147 s/^#//" multmap.h && make installsingle)
+pixi install
+```
+
+The specpr install script also tries to put man pages in `/usr/local/man`; that
+message can be ignored. To run, keep `SP_LOCAL` set (`cmd.runtet` runs
+`$SP_LOCAL/bin/tetracorder6.00`), put the DaVinci helper scripts and the pixi
+environment on PATH as the Containerfile does, and give `tetrapy` the clone's
+`tetracorder/` folder and output paths of your own:
+
+```sh
+export PATH="$PWD/tetracorder/tetracorder.cmds/tetracorder6.00a.cmds/davinci-cmds.for.usr.local.bin:$PWD/.pixi/envs/default/bin:$PATH"
+tetrapy run config.yml --tetracorder.root "$PWD/tetracorder" --output.base /path/to/output \
+  --data.rfl /path/to/rfl --data.rfluncert /path/to/uncert \
+  --convolve.output.reflib /path/to/output/conv/reflib --convolve.output.reslib /path/to/output/conv/reslib
+```
+
+Input, library and output paths may be up to 1024 characters long.
+
 ## The pipeline
 
 `tetrapy run <config.yml>` executes an ordered pipeline. Each stage has an `enabled`
