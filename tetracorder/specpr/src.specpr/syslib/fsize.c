@@ -11,7 +11,7 @@ char *name;
 long len;
 {
 	int i;
-	char buf[256];
+	char buf[1025];   /* file names up to 1024 characters (lblvol) */
 	struct stat	statbuf;
 
 	for (i=0; i<(sizeof buf)-1 && name[i]!=' ' &&  i<len; i++) 

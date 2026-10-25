@@ -40,7 +40,8 @@
 	include "../common/lundefs"
 	include "../common/ioftyp"
 
-	character*80    anull,dummy(7)
+	character*80    anull
+	character*1024  dummy(7)    # same length as the lblvol file names
 	equivalence     (ivfl,dummy(1))
 
 	integer*4 ier, idummy

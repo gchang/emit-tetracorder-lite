@@ -96,7 +96,8 @@
 # all managed by the END case on this read, and the subroutine refile
 #
 			inpipe = pipe(pipelv)
-			read(inpipe,1,end=2000,err=2000,iostat=ier) iopcon
+			read(inpipe,1,end=2000,err=2000,iostat=ier) iopcln
+			iopcon = iopcln   # first 80 characters
 			#write (*,*) 'DEBUG: iopcon=', iopcon
 			savflg = .true.
 			ilast = lnb(iopcon)
@@ -129,6 +130,7 @@
 			}
 		} else {
 			iopcon = copcon(2:80)
+			iopcln = iopcon
 			#write (*,*) 'DEBUG crtin 12'
 			ilast = lnb(iopcon)
 			if (ioutverbose == 0) {

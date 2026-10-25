@@ -1,7 +1,8 @@
 #     /lblvol/ common:
 #               file names of the disk files
+#               (1024 characters; was 80, too short for long paths)
 #
         common /lblvol/ ivfl,iwfl,idfl,isfl,iufl
         common /lblvol/ iyfl,ilfl,irfl
 
-        character*80 ivfl,iwfl,idfl,isfl,iufl,iyfl,ilfl,irfl
+        character*1024 ivfl,iwfl,idfl,isfl,iufl,iyfl,ilfl,irfl

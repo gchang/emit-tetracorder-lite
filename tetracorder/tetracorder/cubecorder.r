@@ -70,9 +70,9 @@
 	integer*4 lnb, fnb
 
 	character*1 imch(5)
-	character*80 icube   # cube file name
-	character*80 chtmp
-	character*200 chtmp2
+	character*1024 icube   # cube file name
+	character*1024 chtmp
+	character*1200 chtmp2
 
 	integer*4 cmdverbose   # function cmdverbose
 
@@ -134,7 +134,13 @@
 		i = i-1
 		if (iopcon(i:i+4) == 'cube:') {
 			i= i+5
-			chtmp = iopcon(i:80)
+			# take the file name from the whole input line (iopcln,
+			# up to 1024 characters) if iopcon holds that same line
+			if (iopcln(1:80) == iopcon) {
+				chtmp = iopcln(i:)
+			} else {
+				chtmp = iopcon(i:80)
+			}
 			itmp1 = fnb(chtmp)
 			itmp2 = lnb(chtmp)
 			#write (ttyout,*) 'DEBUG:',iopcon

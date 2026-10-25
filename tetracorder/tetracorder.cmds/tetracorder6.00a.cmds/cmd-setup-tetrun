@@ -454,10 +454,12 @@ then
 	fi
 	cd $mypwd
 
+	# tetracorder takes the cube path + filename from the cmds.start file
+	# (cube: line) into a 1024-character buffer (was 72 characters)
 	wccube=`echo "$cube" | wc -c`
-	if [ "$wccube" -gt 73 ]
+	if [ "$wccube" -gt 1025 ]
 	then
-		echo "ERROR: cube path + filename is too long: greater than 73 characters"
+		echo "ERROR: cube path + filename is too long: greater than 1024 characters"
 		echo "       cube path + filename = $wccube characters:"
 		echo "       $cube"
 		echo "EXIT 1."

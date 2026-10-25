@@ -40,7 +40,7 @@
 	include "../common/cmd"
 
 #  declare functions ihchar, ifnb, & lnb
-      integer*4 i, ifstchr, ihchar, ifnb, lnb, icmdmax
+      integer*4 i, ifstchr, ihchar, ifnb, lnb, icmdmax, ifnmax
       integer*4 ier, idummy, itrip
 
 #  declare function chchar
@@ -50,7 +50,7 @@
       real*4 x
 
 #   local variables
-      character*120 iopcon2
+      character*1100 iopcon2
       character*8 lnerr
 	character*8 rstartver
 	character*1 ctmp
@@ -58,6 +58,8 @@
 #  set max chars input (cmdmax)
 #  change icmdmax and iopcon2 for larger input string
 	icmdmax = 80
+#  max chars in a file name (lblvol), must be < length of iopcon2 - 4
+	ifnmax = 1024
       itrip = 0
 
 
@@ -77,18 +79,18 @@
       write(rlun,'("#")')
 
 #     lblvol.h
-#     8 - 80 character filenames
+#     8 - 1024 character filenames, written without trailing blanks
       write(rlun,'("# file names")')
       write(rlun,'("#")')
 
-      write(rlun,'("ivfl=",A80)',err=4321) ivfl
-      write(rlun,'("iwfl=",A80)',err=4321) iwfl
-      write(rlun,'("idfl=",A80)',err=4321) idfl
-      write(rlun,'("iufl=",A80)',err=4321) iufl
-      write(rlun,'("iyfl=",A80)',err=4321) iyfl
-      write(rlun,'("isfl=",A80)',err=4321) isfl
-      write(rlun,'("ilfl=",A80)',err=4321) ilfl
-      write(rlun,'("irfl=",A80)',err=4321) irfl
+      write(rlun,'("ivfl=",A)',err=4321) ivfl(1:lnb(ivfl))
+      write(rlun,'("iwfl=",A)',err=4321) iwfl(1:lnb(iwfl))
+      write(rlun,'("idfl=",A)',err=4321) idfl(1:lnb(idfl))
+      write(rlun,'("iufl=",A)',err=4321) iufl(1:lnb(iufl))
+      write(rlun,'("iyfl=",A)',err=4321) iyfl(1:lnb(iyfl))
+      write(rlun,'("isfl=",A)',err=4321) isfl(1:lnb(isfl))
+      write(rlun,'("ilfl=",A)',err=4321) ilfl(1:lnb(ilfl))
+      write(rlun,'("irfl=",A)',err=4321) irfl(1:lnb(irfl))
 
 #     lblprt.h
 #     6 - protection # for open files (u,y,d,v,w,s)
@@ -433,7 +435,7 @@
          if (ic == 4) return
 
 #  read restart version number
-         read(rlun,'(A120)',end=511,iostat=ier) iopcon2
+         read(rlun,'(A1100)',end=511,iostat=ier) iopcon2
             if (ier != 0) goto 1234
 
          if(iopcon2(1:14)=='SPECPR_Restart') {
@@ -482,48 +484,48 @@
 #
 #        START version 2 read LOOP (statements 510-511)
 #
-510      read(rlun,'(A120)',end=511,iostat=ier) iopcon2
+510      read(rlun,'(A1100)',end=511,iostat=ier) iopcon2
             if (ier != 0) goto 1234
 
          iopcon = iopcon2(1:80)
 #
 #        lblvol.h
-#        8 - 80 character filenames
+#        8 - 1024 character filenames
 #          (filename must start at character position 1)
-#		max command string = 120 char (iopcon2)
-#		(icmdmax = 80)
+#		max command string = 1100 char (iopcon2)
+#		(icmdmax = 80, ifnmax = 1024 for the file names)
 #
          if(iopcon2(1:4)=='ivfl') {
-            istart = 4 + ifnb(iopcon2(5:4 + icmdmax))
-            i = istart + lnb(iopcon2(istart:4 + icmdmax))
+            istart = 4 + ifnb(iopcon2(5:4 + ifnmax))
+            i = istart + lnb(iopcon2(istart:4 + ifnmax))
             ivfl = iopcon2(istart:i) }
          if(iopcon2(1:4)=='iwfl') {
-            istart = 4 + ifnb(iopcon2(5:4 + icmdmax))
-            i = istart + lnb(iopcon2(istart:4 + icmdmax))
+            istart = 4 + ifnb(iopcon2(5:4 + ifnmax))
+            i = istart + lnb(iopcon2(istart:4 + ifnmax))
             iwfl = iopcon2(istart:i) }
          if(iopcon2(1:4)=='idfl') {
-            istart = 4 + ifnb(iopcon2(5:4 + icmdmax))
-            i = istart + lnb(iopcon2(istart:4 + icmdmax))
+            istart = 4 + ifnb(iopcon2(5:4 + ifnmax))
+            i = istart + lnb(iopcon2(istart:4 + ifnmax))
             idfl = iopcon2(istart:i) }
          if(iopcon2(1:4)=='iufl') {
-            istart = 4 + ifnb(iopcon2(5:4 + icmdmax))
-            i = istart + lnb(iopcon2(istart:4 + icmdmax))
+            istart = 4 + ifnb(iopcon2(5:4 + ifnmax))
+            i = istart + lnb(iopcon2(istart:4 + ifnmax))
             iufl = iopcon2(istart:i) }
          if(iopcon2(1:4)=='iyfl') {
-            istart = 4 + ifnb(iopcon2(5:4 + icmdmax))
-            i = istart + lnb(iopcon2(istart:4 + icmdmax))
+            istart = 4 + ifnb(iopcon2(5:4 + ifnmax))
+            i = istart + lnb(iopcon2(istart:4 + ifnmax))
             iyfl = iopcon2(istart:i) }
          if(iopcon2(1:4)=='isfl') {
-            istart = 4 + ifnb(iopcon2(5:4 + icmdmax))
-            i = istart + lnb(iopcon2(istart:4 + icmdmax))
+            istart = 4 + ifnb(iopcon2(5:4 + ifnmax))
+            i = istart + lnb(iopcon2(istart:4 + ifnmax))
             isfl = iopcon2(istart:i) }
          if(iopcon2(1:4)=='ilfl') {
-            istart = 4 + ifnb(iopcon2(5:4 + icmdmax))
-            i = istart + lnb(iopcon2(istart:4 + icmdmax))
+            istart = 4 + ifnb(iopcon2(5:4 + ifnmax))
+            i = istart + lnb(iopcon2(istart:4 + ifnmax))
             ilfl = iopcon2(istart:i) }
          if(iopcon2(1:4)=='irfl') {
-            istart = 4 + ifnb(iopcon2(5:4 + icmdmax))
-            i = istart + lnb(iopcon2(istart:4 + icmdmax))
+            istart = 4 + ifnb(iopcon2(5:4 + ifnmax))
+            i = istart + lnb(iopcon2(istart:4 + ifnmax))
             irfl = iopcon2(istart:i) }
 
 #        lblprt.h
@@ -1114,7 +1116,7 @@
          }
 
 #     cmd.h
-#	NOTE: icmdmax + 40 = 120; iopcon2 = 120; so array not exceeded
+#	NOTE: icmdmax + 40 = 120; iopcon2 = 1100; so array not exceeded
          if(iopcon2(1:5)=='cfile') {
             istart = 5 + ifnb(iopcon2(6:5 + icmdmax))
             i = istart + lnb(iopcon2(istart:istart + 39))

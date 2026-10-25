@@ -44,7 +44,7 @@
 	integer*4 lnb        # function lnb
 
 	character*9     anull
-	character*80    dummy(6)
+	character*1024  dummy(6)    # same length as the lblvol file names
 	character*9     tape
 
 	integer*4 prot(6),map(6),map2(6)

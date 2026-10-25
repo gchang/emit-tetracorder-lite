@@ -11,13 +11,17 @@
 #  cndx   =
 #  inline = 
 #  iend   = 
+#  iopcln = the whole input line as read by crtin, up to 1024 characters
+#           (iopcon gets the first 80); used for long file names
 #
         common /cmd/    cfile,infile,copcon
         common /cmd/    copy,redire
         common /cmd/    icoman,iprom,cndx,inline,iend
 	common /cmd/	helppg
+	common /cmd/	iopcln
 
         character*40    cfile,infile,helppg
         character*80    copcon
+        character*1024  iopcln
         logical         copy,redire
         integer*4       icoman,iprom,cndx,inline,iend

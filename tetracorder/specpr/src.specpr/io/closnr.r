@@ -13,7 +13,7 @@
 
 	integer*4 ier
 
-	character*40	filenm
+	character*1024	filenm      # same length as the lblvol file names
 
 
 	if (lun == 3) {
